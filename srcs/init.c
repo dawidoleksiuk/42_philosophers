@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 21:11:28 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/03/29 12:21:33 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/07 14:17:41 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int	run_simulation(t_data *data, t_philo *philo_array)
 			return (1);
 		i++;
 	}
-	if (pthread_create(&data->death_th, NULL, &monitor_routine, philo_array) != 0)
+	if (pthread_create(&data->death_th, NULL,
+			&monitor_routine, philo_array) != 0)
 		return (1);
 	i = 0;
 	while (i < data->num_of_philos)
@@ -107,7 +108,8 @@ void	init_mutex(t_data *data, t_philo *philo_array)
 	}
 }
 
-int	init_program_data(int argc, char *argv[], t_data *data, t_philo **philo_array)
+int	init_program_data(int argc, char *argv[],
+					t_data *data, t_philo **philo_array)
 {
 	memset(data, 0, sizeof(t_data));
 	if (parse_args(argc, argv, data) != 0)
