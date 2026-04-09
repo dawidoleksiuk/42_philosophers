@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:56:51 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/03/29 12:25:46 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/07 20:53:42 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,33 +51,17 @@ struct s_philo
 	t_data			*data;
 };
 
-//simulation.c
-void		sleeping(t_data *data, int philo_id);
-void		eating(t_data *data, t_philo *philo_array, int philo_id);
-void		*philo_routine(void *arg);
-void		*monitor_death(void *arg);
-
-//init.c
 int			run_simulation(t_data *data, t_philo *philo_array);
-int			data_validation(int argc, char *argv[]);
+void		*philo_routine(void *arg);
+void		*monitor_routine(void *arg);
 int			init_program_data(int argc, char *argv[],
 				t_data *data, t_philo **philo_array);
+void		clean_exit(t_data *data, t_philo *philo_array);
 
 //utils.c
 void		ft_sleep_ms(long long time);
 long long	get_current_time(t_data *data);
 int			str_to_int(char *str, long long *arg);
-int			data_validation(int argc, char *argv[]);
 int	check_stop(t_data *data);
 int			print_state(t_data *data, int philo_id, char *str);
 
-//clean_exit
-void		clean_exit(t_data *data, t_philo *philo_array);
-
-//monitor.c
-void		*monitor_routine(void *arg);
-
-//actions.c
-int			philo_sleep(t_data *data, int philo_id);
-int		philo_eat(t_data *data, t_philo *philo_array, int philo_id);
-int			philo_think(t_data *data, int philo_id);

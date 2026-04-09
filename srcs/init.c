@@ -6,41 +6,42 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 21:11:28 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/07 14:17:41 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/07 20:46:25 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-int	run_simulation(t_data *data, t_philo *philo_array)
+static int	data_validation(int argc, char *argv[])
 {
-	int		i;
-	t_philo	*p;
+	int	i;
+	int	j;
 
-	i = 0;
-	while (i < data->num_of_philos)
+	i = 1;
+	if (argc != 5 && argc != 6)
 	{
-		p = &philo_array[i];
-		if (pthread_create(&p->thread_id, NULL, &philo_routine, p) != 0)
-			return (1);
+		printf("Usage: ./philo number_of_philosophers time_to_die[ms] "
+			"time_to_eat[ms] time_to_sleep[ms] "
+			"[number_of_times_each_philosopher_must_eat]\n");
+		return (1);
+	}
+	while (i < argc)
+	{
+		j = 0;
+		while (argv[i][j])
+		{
+			if (!(argv[i][j] >= '0' && argv[i][j] <= '9'))
+				return (printf("All arguments must be positive numbers.\n"), 1);
+			j++;
+		}
 		i++;
 	}
-	if (pthread_create(&data->death_th, NULL,
-			&monitor_routine, philo_array) != 0)
-		return (1);
-	i = 0;
-	while (i < data->num_of_philos)
-	{
-		if (pthread_join(philo_array[i].thread_id, NULL) != 0)
-			return (1);
-		i++;
-	}
-	if (pthread_join(data->death_th, NULL) != 0)
-		return (1);
 	return (0);
 }
 
-int	parse_args(int argc, char *argv[], t_data *data)
+/* converts argv values to ints and validates them */
+
+static int	parse_args(int argc, char *argv[], t_data *data)
 {
 	if (str_to_int(argv[1], &data->num_of_philos) != 0
 		|| data->num_of_philos > MAX_PHILO || data->num_of_philos == 0)
@@ -67,7 +68,9 @@ int	parse_args(int argc, char *argv[], t_data *data)
 	return (0);
 }
 
-int	init_philosophers(t_data *data, t_philo *philo_array)
+/* initiates all philo data */
+
+static int	init_philosophers(t_data *data, t_philo *philo_array)
 {
 	int	i;
 
@@ -93,7 +96,7 @@ int	init_philosophers(t_data *data, t_philo *philo_array)
 	return (0);
 }
 
-void	init_mutex(t_data *data, t_philo *philo_array)
+static void	init_mutex(t_data *data, t_philo *philo_array)
 {
 	int	i;
 
@@ -111,6 +114,8 @@ void	init_mutex(t_data *data, t_philo *philo_array)
 int	init_program_data(int argc, char *argv[],
 					t_data *data, t_philo **philo_array)
 {
+	if (data_validation(argc, argv) != 0)
+		return (1);
 	memset(data, 0, sizeof(t_data));
 	if (parse_args(argc, argv, data) != 0)
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 20:01:46 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/03/29 18:23:09 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/07 20:59:20 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,33 +58,6 @@ int	str_to_int(char *str, long long *arg)
 	}
 	if (*arg > UINT_MAX / 1000)
 		return (1);
-	return (0);
-}
-
-int	data_validation(int argc, char *argv[])
-{
-	int	i;
-	int	j;
-
-	i = 1;
-	if (argc != 5 && argc != 6)
-	{
-		printf("Usage: ./philo number_of_philosophers time_to_die[ms] "
-			"time_to_eat[ms] time_to_sleep[ms] "
-			"[number_of_times_each_philosopher_must_eat]\n");
-		return (1);
-	}
-	while (i < argc)
-	{
-		j = 0;
-		while (argv[i][j])
-		{
-			if (!(argv[i][j] >= '0' && argv[i][j] <= '9'))
-				return (printf("All arguments must be positive numbers.\n"), 1);
-			j++;
-		}
-		i++;
-	}
 	return (0);
 }
 

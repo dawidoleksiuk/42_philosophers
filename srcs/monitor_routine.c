@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 18:14:49 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/07 14:24:18 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/07 20:40:31 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,10 @@ static int	check_if_full(t_philo *philo_array, t_data *data, int *i)
 	return (0);
 }
 
-static int	close_program(t_data *data, t_philo *philo_array, int *i)
+/* check if someone is dead or everyone ate as many times as it's needed
+ if the above conditions are met, it returns 1*/
+
+static int	check_stop_conditions(t_data *data, t_philo *philo_array, int *i)
 {
 	if (check_if_dead(philo_array, data, i))
 	{
@@ -62,9 +65,7 @@ static int	close_program(t_data *data, t_philo *philo_array, int *i)
 	if (data->num_of_times_to_eat > 0)
 	{
 		if (check_if_full(philo_array, data, i))
-		{
 			return (1);
-		}
 	}
 	return (0);
 }
@@ -86,7 +87,7 @@ void	*monitor_routine(void *arg)
 			i = 0;
 			data->finished_eating_count = 0;
 		}
-		if (close_program(data, philo_array, &i))
+		if (check_stop_conditions(data, philo_array, &i))
 			break ;
 		i++;
 	}
