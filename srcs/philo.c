@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:56:34 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/07 20:51:12 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/11 11:34:46 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	main(int argc, char *argv[])
 	}
 	run_simulation(&data, philo_array);
 	clean_exit(&data, philo_array);
+	return (0);
 }
 
 /* creates threads for each of the philos and monitoring, 
@@ -50,7 +51,8 @@ int	run_simulation(t_data *data, t_philo *philo_array)
 	i = 0;
 	while (i < data->num_of_philos)
 	{
-		if (pthread_join(philo_array[i].thread_id, NULL) != 0)
+		p = &philo_array[i];
+		if (pthread_join(p->thread_id, NULL) != 0)
 			return (1);
 		i++;
 	}

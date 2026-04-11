@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   monitor.c                                          :+:      :+:    :+:   */
+/*   monitor_routine.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 18:14:49 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/07 20:40:31 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/11 12:18:14 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,26 @@ static void	set_stop_flag(t_data *data)
 	pthread_mutex_unlock(&data->mutex_stop);
 }
 
-static int	check_if_dead(t_philo *philo_array, t_data *data, int *i)
+static int	check_if_dead(t_philo *philo_array, t_data *data, int i)
 {
 	long long		time;
 
-	pthread_mutex_lock(&philo_array[*i].mutex_deathtime);
+	pthread_mutex_lock(&philo_array[i].mutex_deathtime);
 	time = get_current_time(data);
-	if (philo_array[*i].death_time <= time)
+	if (philo_array[i].deathtime <= time)
 	{
-		pthread_mutex_unlock(&philo_array[*i].mutex_deathtime);
+		pthread_mutex_unlock(&philo_array[i].mutex_deathtime);
 		set_stop_flag(data);
 		return (1);
 	}
-	pthread_mutex_unlock(&philo_array[*i].mutex_deathtime);
+	pthread_mutex_unlock(&philo_array[i].mutex_deathtime);
 	return (0);
 }
 
-static int	check_if_full(t_philo *philo_array, t_data *data, int *i)
+static int	check_if_full(t_philo *philo_array, t_data *data, int i)
 {
 	pthread_mutex_lock(&data->mutex_stop);
-	if (philo_array[*i].eat_count == data->num_of_times_to_eat)
+	if (philo_array[i].eat_count == data->num_of_times_to_eat)
 	{
 		data->finished_eating_count++;
 		if (data->finished_eating_count == data->num_of_philos)
@@ -55,11 +55,11 @@ static int	check_if_full(t_philo *philo_array, t_data *data, int *i)
 /* check if someone is dead or everyone ate as many times as it's needed
  if the above conditions are met, it returns 1*/
 
-static int	check_stop_conditions(t_data *data, t_philo *philo_array, int *i)
+static int	check_stop_conditions(t_data *data, t_philo *philo_array, int i)
 {
 	if (check_if_dead(philo_array, data, i))
 	{
-		print_state(data, philo_array[*i].philo_id, "died");
+		print_state(data, philo_array[i].philo_id, "died");
 		return (1);
 	}
 	if (data->num_of_times_to_eat > 0)
@@ -87,7 +87,7 @@ void	*monitor_routine(void *arg)
 			i = 0;
 			data->finished_eating_count = 0;
 		}
-		if (check_stop_conditions(data, philo_array, &i))
+		if (check_stop_conditions(data, philo_array, i))
 			break ;
 		i++;
 	}

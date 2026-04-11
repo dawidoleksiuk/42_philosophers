@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:56:51 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/07 20:53:42 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/11 12:05:27 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ typedef struct s_philo	t_philo;
 
 typedef struct s_data
 {
-	int				stop_simulation;
 	long long		num_of_philos;
 	long long		time_to_die;
 	long long		time_to_eat;
 	long long		time_to_sleep;
 	long long		num_of_times_to_eat;
+	int				stop_simulation;
 	int				finished_eating_count;
 	struct timeval	start_time;
 	pthread_t		death_th;
@@ -43,25 +43,25 @@ struct s_philo
 	int				philo_id;
 	pthread_t		thread_id;
 	int				eat_count;
-	long long		death_time;
+	long long		deathtime;
 	pthread_mutex_t	mutex_fork;
+	pthread_mutex_t	mutex_deathtime;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	mutex_deathtime;
 	t_data			*data;
 };
 
-int			run_simulation(t_data *data, t_philo *philo_array);
-void		*philo_routine(void *arg);
-void		*monitor_routine(void *arg);
 int			init_program_data(int argc, char *argv[],
 				t_data *data, t_philo **philo_array);
 void		clean_exit(t_data *data, t_philo *philo_array);
+int			run_simulation(t_data *data, t_philo *philo_array);
+void		*philo_routine(void *arg);
+void		*monitor_routine(void *arg);
 
 //utils.c
+int			str_to_int(char *str, long long *arg);
+int			check_stop(t_data *data);
 void		ft_sleep_ms(long long time);
 long long	get_current_time(t_data *data);
-int			str_to_int(char *str, long long *arg);
-int	check_stop(t_data *data);
 int			print_state(t_data *data, int philo_id, char *str);
 

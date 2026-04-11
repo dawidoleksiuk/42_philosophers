@@ -6,13 +6,13 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:19:22 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/03/23 21:50:02 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/11 11:36:02 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-void	mutex_destroy(t_data *data, t_philo *philo_array)
+static void	destroy_mutex(t_data *data, t_philo *philo_array)
 {
 	int	i;
 
@@ -29,6 +29,6 @@ void	mutex_destroy(t_data *data, t_philo *philo_array)
 
 void	clean_exit(t_data *data, t_philo *philo_array)
 {
-	mutex_destroy(data, philo_array);
+	destroy_mutex(data, philo_array);
 	free(philo_array);
 }

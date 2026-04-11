@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 21:11:28 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/07 20:46:25 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/11 12:06:12 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,21 @@ static int	parse_args(int argc, char *argv[], t_data *data)
 	return (0);
 }
 
+static void	init_mutex(t_data *data, t_philo *philo_array)
+{
+	int	i;
+
+	i = 0;
+	pthread_mutex_init(&data->mutex_print, NULL);
+	pthread_mutex_init(&data->mutex_stop, NULL);
+	while (i < data->num_of_philos)
+	{
+		pthread_mutex_init(&philo_array[i].mutex_fork, NULL);
+		pthread_mutex_init(&philo_array[i].mutex_deathtime, NULL);
+		i++;
+	}
+}
+
 /* initiates all philo data */
 
 static int	init_philosophers(t_data *data, t_philo *philo_array)
@@ -79,7 +94,7 @@ static int	init_philosophers(t_data *data, t_philo *philo_array)
 	{
 		memset(&philo_array[i], 0, sizeof(t_philo));
 		philo_array[i].philo_id = i + 1;
-		philo_array[i].death_time = data->time_to_die;
+		philo_array[i].deathtime = data->time_to_die;
 		philo_array[i].data = data;
 		if (philo_array[i].philo_id == data->num_of_philos)
 		{
@@ -94,21 +109,6 @@ static int	init_philosophers(t_data *data, t_philo *philo_array)
 		i++;
 	}
 	return (0);
-}
-
-static void	init_mutex(t_data *data, t_philo *philo_array)
-{
-	int	i;
-
-	i = 0;
-	pthread_mutex_init(&data->mutex_print, NULL);
-	pthread_mutex_init(&data->mutex_stop, NULL);
-	while (i < data->num_of_philos)
-	{
-		pthread_mutex_init(&philo_array[i].mutex_fork, NULL);
-		pthread_mutex_init(&philo_array[i].mutex_deathtime, NULL);
-		i++;
-	}
 }
 
 int	init_program_data(int argc, char *argv[],

@@ -47,17 +47,45 @@ The program accepts the following arguments:
 ```
 *Starts a simulation with 4 philosophers where each must eat at least 5 times before the program terminates successfully.*
 
+## Implementation Details
+
+### Parsing
+Input arguments are validated to ensure they are positive integers. The values are stored in a `t_data` structure. 
+
+### Initialization
+Philosophers are stored in a **contiguous array** of structures. Each philosopher is assigned a unique ID and pointers to two mutexes (their own left fork and their neighbor's right fork). 
+
+### Start & Synchronization
+All philosopher threads are created in a loop. To prevent deadlocks, a delay strategy is used:
+* **Even-numbered** philosophers are delayed by half of the `time_to_eat` at the start of the program.
+* If total number of philosophers is odd, a 1ms delay is added to the thinking routine to prevent fork contention and starvation.
+
+### Monitoring & Thread Safety
+The main thread (monitor_routine) continuously checks for death or fullness. To ensure thread safety, a dedicated **`mutex_stop`** is used:
+* **monitor_routine** locks it to set the `stop_simulation` flag when a death or "everyone is full" condition is met.
+* **Philosopher threads** lock it periodically to check the status of the `stop_simulation` flag.
+* This mutex is also used to update and read the `eat_count` variable.
+This prevents data races and ensures that all threads stop as soon as the simulation is over.
+
+### Cleanup
+The program ensures no resources are leaked by:
+1. Using `pthread_join` to wait for all threads.
+2. Destroying all fork mutexes, the print mutex, and the stop mutex.
+3. Freeing the allocated memory for the philosopher array.
+
 ## Resources
 
 ### Classic References
-* [Dining philosophers problem (Wikipedia)](https://en.wikipedia.org/wiki/Dining_philosophers_problem) - Overview of the theoretical computer science problem.
+* [CodeVault - Unix Threads in C (YouTube Playlist)](https://www.youtube.com/watch?v=d9s_d28yJq0&list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2) - An invaluable video series explaining the core concepts of threading, mutexes, and synchronization in C.
+* Respective function manual pages and [GeeksforGeeks](https://www.geeksforgeeks.org/c/thread-functions-in-c-c/) explaining these functions.
 * [POSIX Threads Programming](https://hpc-tutorials.llnl.gov/posix/) - Comprehensive guide to working with `pthread` libraries in C.
 * [Valgrind Helgrind Manual](https://valgrind.org/docs/manual/hg-manual.html) - Documentation for the Valgrind tool used to detect synchronization errors and data races.
 
 ### AI Usage
-During the development of this project, Artificial Intelligence (Google Gemini) was used as an analytical tutor to reduce repetitive troubleshooting and clarify complex OS-level mechanisms. All generated insights were critically assessed. 
+During the development of this project, AI (Google Gemini) was used as an analytical tutor to reduce repetitive troubleshooting and clarify complex OS-level mechanisms. All generated insights were critically assessed. 
 
 Specifically, AI was used for:
 * **Log Analysis:** Interpreting terminal output timestamps to distinguish between algorithmic deadlocks and OS-level thread starvation caused by environmental limitations (e.g., WSL terminal I/O blocking).
 * **Conceptual Explanations:** Clarifying how AddressSanitizer (`-fsanitize=address`) allocates shadow memory, and how this impacts virtual memory limits and thread scheduling within a WSL environment.
 * **Brainstorming Strategies:** Discussing logical concepts to prevent fork contention (e.g., staggering execution times for odd/even threads) without generating or copy-pasting actual C code, ensuring complete personal understanding and responsibility for the final implementation.
+* **Documentation:** To generate an initial draft of this README file, which was then manually reviewed, refined, and verified for accuracy against the project specifications.

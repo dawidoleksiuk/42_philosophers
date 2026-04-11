@@ -1,24 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   threads.c                                          :+:      :+:    :+:   */
+/*   philo_routine.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 20:07:41 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/07 20:33:33 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/11 12:13:42 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
-
-static int	philo_sleep(t_data *data, int philo_id)
-{
-	if (!check_stop(data))
-		print_state(data, philo_id, "is sleeping");
-	ft_sleep_ms(data->time_to_sleep);
-	return (0);
-}
 
 static int	lock_forks(t_data *data, t_philo *philo_array, int index)
 {
@@ -41,13 +33,13 @@ static int	philo_eat(t_data *data, t_philo *philo_array, int index)
 {
 	long long		time;
 
-	if (lock_forks(data, philo_array, index))
+	if (lock_forks(data, philo_array, index) != 0)
 		return (1);
 	if (!check_stop(data))
 	{
 		pthread_mutex_lock(&philo_array[index].mutex_deathtime);
 		time = get_current_time(data);
-		philo_array[index].death_time = time + data->time_to_die;
+		philo_array[index].deathtime = time + data->time_to_die;
 		pthread_mutex_unlock(&philo_array[index].mutex_deathtime);
 		print_state(data, index + 1, "is eating");
 		ft_sleep_ms(data->time_to_eat);
@@ -64,6 +56,15 @@ static int	philo_eat(t_data *data, t_philo *philo_array, int index)
 	}
 	return (0);
 }
+
+static int	philo_sleep(t_data *data, int philo_id)
+{
+	if (!check_stop(data))
+		print_state(data, philo_id, "is sleeping");
+	ft_sleep_ms(data->time_to_sleep);
+	return (0);
+}
+
 /* if uneven num of philos, sleep for 1ms 
 to avoid philosophers taking knives in the same second */
 
