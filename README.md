@@ -64,8 +64,7 @@ All philosopher threads are created in a loop. To prevent deadlocks, a delay str
 The main thread (monitor_routine) continuously checks for death or fullness. To ensure thread safety, a dedicated **`mutex_stop`** is used:
 * **monitor_routine** locks it to set the `stop_simulation` flag when a death or "everyone is full" condition is met.
 * **Philosopher threads** lock it periodically to check the status of the `stop_simulation` flag.
-* This mutex is also used to update and read the `eat_count` variable.
-This prevents data races and ensures that all threads stop as soon as the simulation is over.
+* This mutex is also used to update and read the `eat_count` variable. This prevents data races and ensures that all threads stop as soon as all philosophers ate the required number of times.
 
 ### Cleanup
 The program ensures no resources are leaked by:
