@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 20:07:41 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/11 12:13:42 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/06/29 17:37:27 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ static int	philo_eat(t_data *data, t_philo *philo_array, int index)
 		return (1);
 	if (data->num_of_times_to_eat > 0)
 	{
-		pthread_mutex_lock(&data->mutex_stop);
+		pthread_mutex_lock(&philo_array[index].mutex_deathtime);
 		philo_array[index].eat_count++;
-		pthread_mutex_unlock(&data->mutex_stop);
+		pthread_mutex_unlock(&philo_array[index].mutex_deathtime);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 21:11:28 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/11 12:06:12 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/06/29 17:05:39 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	parse_args(int argc, char *argv[], t_data *data)
 	if (str_to_int(argv[1], &data->num_of_philos) != 0
 		|| data->num_of_philos > MAX_PHILO || data->num_of_philos == 0)
 		return (printf("Wrong number of philosophers. "
-				"It can be 1 to 200\n"), 1);
+				"It can be 1 to %d\n", MAX_PHILO), 1);
 	if (str_to_int(argv[2], &data->time_to_die) != 0)
 		return (printf("Time to die too high. It can be max 4294967\n"), 1);
 	if (str_to_int(argv[3], &data->time_to_eat) != 0)
@@ -74,7 +74,7 @@ static void	init_mutex(t_data *data, t_philo *philo_array)
 
 	i = 0;
 	pthread_mutex_init(&data->mutex_print, NULL);
-	pthread_mutex_init(&data->mutex_stop, NULL);
+	pthread_mutex_init(&data->mutex_stop_sim, NULL);
 	while (i < data->num_of_philos)
 	{
 		pthread_mutex_init(&philo_array[i].mutex_fork, NULL);

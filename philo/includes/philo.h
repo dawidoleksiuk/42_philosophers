@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:56:51 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/13 12:00:17 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/06/29 17:04:08 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_data
 	struct timeval	start_time;
 	pthread_t		monitor_thread_id;
 	pthread_mutex_t	mutex_print;
-	pthread_mutex_t	mutex_stop;
+	pthread_mutex_t	mutex_stop_sim;
 	t_philo			*philo_array;
 }				t_data;
 

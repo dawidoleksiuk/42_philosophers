@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 20:01:46 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/11 12:05:36 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/06/29 17:05:03 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ int	str_to_int(char *str, long long *arg)
 
 int	check_stop(t_data *data)
 {
-	pthread_mutex_lock(&data->mutex_stop);
+	pthread_mutex_lock(&data->mutex_stop_sim);
 	if (data->stop_simulation)
 	{
-		pthread_mutex_unlock(&data->mutex_stop);
+		pthread_mutex_unlock(&data->mutex_stop_sim);
 		return (1);
 	}
-	pthread_mutex_unlock(&data->mutex_stop);
+	pthread_mutex_unlock(&data->mutex_stop_sim);
 	return (0);
 }
 

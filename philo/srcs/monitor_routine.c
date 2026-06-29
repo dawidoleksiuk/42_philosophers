@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 18:14:49 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/11 12:18:14 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/06/29 17:41:24 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static void	set_stop_flag(t_data *data)
 {
-	pthread_mutex_lock(&data->mutex_stop);
+	pthread_mutex_lock(&data->mutex_stop_sim);
 	data->stop_simulation = 1;
-	pthread_mutex_unlock(&data->mutex_stop);
+	pthread_mutex_unlock(&data->mutex_stop_sim);
 }
 
 static int	check_if_dead(t_philo *philo_array, t_data *data, int i)
@@ -37,18 +37,19 @@ static int	check_if_dead(t_philo *philo_array, t_data *data, int i)
 
 static int	check_if_full(t_philo *philo_array, t_data *data, int i)
 {
-	pthread_mutex_lock(&data->mutex_stop);
-	if (philo_array[i].eat_count == data->num_of_times_to_eat)
+	pthread_mutex_lock(&philo_array[i].mutex_deathtime);
+	if (philo_array[i].eat_count >= data->num_of_times_to_eat)
 	{
 		data->finished_eating_count++;
+		printf("philosophers ate: %d\n", data->finished_eating_count);
 		if (data->finished_eating_count == data->num_of_philos)
 		{
-			pthread_mutex_unlock(&data->mutex_stop);
+			pthread_mutex_unlock(&philo_array[i].mutex_deathtime);
 			set_stop_flag(data);
 			return (1);
 		}
 	}
-	pthread_mutex_unlock(&data->mutex_stop);
+	pthread_mutex_unlock(&philo_array[i].mutex_deathtime);
 	return (0);
 }
 
