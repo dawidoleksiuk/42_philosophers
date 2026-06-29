@@ -6,12 +6,12 @@
 #    By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/29 19:52:22 by doleksiu          #+#    #+#              #
-#    Updated: 2026/04/07 20:54:42 by doleksiu         ###   ########.fr        #
+#    Updated: 2026/04/13 11:58:24 by doleksiu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -pthread -g -I$(INCS_DIR)
+CFLAGS = -Wall -Werror -Wextra -pthread -I$(INCS_DIR)
 
 NAME = philo
 

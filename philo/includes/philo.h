@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:56:51 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/11 12:05:27 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/13 12:00:17 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_data
 	int				stop_simulation;
 	int				finished_eating_count;
 	struct timeval	start_time;
-	pthread_t		death_th;
+	pthread_t		monitor_thread_id;
 	pthread_mutex_t	mutex_print;
 	pthread_mutex_t	mutex_stop;
 	t_philo			*philo_array;
@@ -41,7 +41,7 @@ typedef struct s_data
 struct s_philo
 {
 	int				philo_id;
-	pthread_t		thread_id;
+	pthread_t		philo_thread_id;
 	int				eat_count;
 	long long		deathtime;
 	pthread_mutex_t	mutex_fork;
@@ -64,4 +64,3 @@ int			check_stop(t_data *data);
 void		ft_sleep_ms(long long time);
 long long	get_current_time(t_data *data);
 int			print_state(t_data *data, int philo_id, char *str);
-

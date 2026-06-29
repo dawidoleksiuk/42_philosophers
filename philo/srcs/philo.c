@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:56:34 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/04/11 11:34:46 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/04/13 12:00:11 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,22 @@ int	run_simulation(t_data *data, t_philo *philo_array)
 	while (i < data->num_of_philos)
 	{
 		p = &philo_array[i];
-		if (pthread_create(&p->thread_id, NULL, &philo_routine, p) != 0)
+		if (pthread_create(&p->philo_thread_id, NULL, &philo_routine, p) != 0)
 			return (1);
 		i++;
 	}
-	if (pthread_create(&data->death_th, NULL,
+	if (pthread_create(&data->monitor_thread_id, NULL,
 			&monitor_routine, philo_array) != 0)
 		return (1);
 	i = 0;
 	while (i < data->num_of_philos)
 	{
 		p = &philo_array[i];
-		if (pthread_join(p->thread_id, NULL) != 0)
+		if (pthread_join(p->philo_thread_id, NULL) != 0)
 			return (1);
 		i++;
 	}
-	if (pthread_join(data->death_th, NULL) != 0)
+	if (pthread_join(data->monitor_thread_id, NULL) != 0)
 		return (1);
 	return (0);
 }
