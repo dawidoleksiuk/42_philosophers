@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 20:07:41 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/06/29 17:37:27 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/06/30 17:07:43 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 static int	lock_forks(t_data *data, t_philo *philo_array, int index)
 {
-	pthread_mutex_lock(philo_array[index].left_fork);
-	if (!check_stop(data))
+	if (philo_array[index].philo_id % 2 != 0)
+	{
+		pthread_mutex_lock(philo_array[index].left_fork);
 		print_state(data, index + 1, "has taken a fork");
+	}
 	if (data->num_of_philos == 1)
 	{
 		ft_sleep_ms(data->time_to_die);
@@ -24,8 +26,12 @@ static int	lock_forks(t_data *data, t_philo *philo_array, int index)
 		return (1);
 	}
 	pthread_mutex_lock(philo_array[index].right_fork);
-	if (!check_stop(data))
+	print_state(data, index + 1, "has taken a fork");
+	if (philo_array[index].philo_id % 2 == 0)
+	{
+		pthread_mutex_lock(philo_array[index].left_fork);
 		print_state(data, index + 1, "has taken a fork");
+	}
 	return (0);
 }
 
@@ -35,32 +41,32 @@ static int	philo_eat(t_data *data, t_philo *philo_array, int index)
 
 	if (lock_forks(data, philo_array, index) != 0)
 		return (1);
-	if (!check_stop(data))
+	if (check_stop(data) == 0)
 	{
 		pthread_mutex_lock(&philo_array[index].mutex_deathtime);
 		time = get_current_time(data);
 		philo_array[index].deathtime = time + data->time_to_die;
 		pthread_mutex_unlock(&philo_array[index].mutex_deathtime);
-		print_state(data, index + 1, "is eating");
-		ft_sleep_ms(data->time_to_eat);
+		if (print_state(data, index + 1, "is eating") == 0)
+			ft_sleep_ms(data->time_to_eat);
 	}
 	pthread_mutex_unlock(philo_array[index].right_fork);
 	pthread_mutex_unlock(philo_array[index].left_fork);
-	if (check_stop(data))
+	if (check_stop(data) != 0)
 		return (1);
 	if (data->num_of_times_to_eat > 0)
 	{
-		pthread_mutex_lock(&philo_array[index].mutex_deathtime);
+		pthread_mutex_lock(&data->mutex_stop_sim);
 		philo_array[index].eat_count++;
-		pthread_mutex_unlock(&philo_array[index].mutex_deathtime);
+		pthread_mutex_unlock(&data->mutex_stop_sim);
 	}
 	return (0);
 }
 
 static int	philo_sleep(t_data *data, int philo_id)
 {
-	if (!check_stop(data))
-		print_state(data, philo_id, "is sleeping");
+	if (print_state(data, philo_id, "is sleeping") != 0)
+		return (1);
 	ft_sleep_ms(data->time_to_sleep);
 	return (0);
 }
@@ -70,8 +76,8 @@ to avoid philosophers taking knives in the same second */
 
 static int	philo_think(t_data *data, int philo_id)
 {
-	if (!check_stop(data))
-		print_state(data, philo_id, "is thinking");
+	if (print_state(data, philo_id, "is thinking") != 0)
+		return (1);
 	if (data->num_of_philos % 2 != 0)
 		ft_sleep_ms(1);
 	return (0);

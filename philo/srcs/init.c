@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 21:11:28 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/06/29 17:05:39 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/06/30 15:44:48 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,8 @@ static int	init_philosophers(t_data *data, t_philo *philo_array)
 		philo_array[i].data = data;
 		if (philo_array[i].philo_id == data->num_of_philos)
 		{
-			philo_array[i].left_fork = &philo_array[0].mutex_fork;
-			philo_array[i].right_fork = &philo_array[i].mutex_fork;
+			philo_array[i].left_fork = &philo_array[i].mutex_fork;
+			philo_array[i].right_fork = &philo_array[0].mutex_fork;
 		}
 		else
 		{

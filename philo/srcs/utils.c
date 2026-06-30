@@ -6,7 +6,7 @@
 /*   By: doleksiu <doleksiu@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 20:01:46 by doleksiu          #+#    #+#             */
-/*   Updated: 2026/06/29 17:05:03 by doleksiu         ###   ########.fr       */
+/*   Updated: 2026/06/30 18:05:03 by doleksiu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	str_to_int(char *str, long long *arg)
 int	check_stop(t_data *data)
 {
 	pthread_mutex_lock(&data->mutex_stop_sim);
-	if (data->stop_simulation)
+	if (data->stop_simulation == 1)
 	{
 		pthread_mutex_unlock(&data->mutex_stop_sim);
 		return (1);
@@ -78,6 +78,11 @@ int	print_state(t_data *data, int philo_id, char *str)
 	long long		time;
 
 	pthread_mutex_lock(&data->mutex_print);
+	if (check_stop(data) != 0 && str[0] != 'd')
+	{
+		pthread_mutex_unlock(&data->mutex_print);
+		return (1);
+	}
 	time = get_current_time(data);
 	printf("%lld %d %s\n", time, philo_id, str);
 	pthread_mutex_unlock(&data->mutex_print);
